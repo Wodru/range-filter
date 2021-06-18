@@ -1,0 +1,24 @@
+.input-range {
+    width: 100%;
+
+    .input-range__bar-background {
+        width: 100%;
+        height: 5px;
+        background-color: lightgray;
+        position: relative;
+
+        .input-range__bar {
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            height: 100%;
+            background-color: lightslategray;
+
+
+            .input-range__label {
+
+            }
+        }
+
+    }
+}
