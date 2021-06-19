@@ -6,10 +6,17 @@ class Range extends React.Component {
         this.state = {
             currentMin: props.min,
             tempCurrentMin: props.min,
+            startCurrentMin: props.min,
             currentMax: props.max,
-            tempCurrentMax: props.max
+            tempCurrentMax: props.max,
+            startCurrentMax: props.max,
+            isGrabbing: false,
+            startPositionX: 0,
         }
+        this.bar = React.createRef()
+        this.fixed = 0
     }
+
 
     calculateLeftPercent() {
         const diff = this.props.max - this.props.min
@@ -18,7 +25,7 @@ class Range extends React.Component {
 
     calculateWidthPercent() {
         const diff = this.props.max - this.props.min
-        const currentDiffMinOne = (this.state.currentMax - this.state.currentMin) > 1 ? this.state.currentMax - this.state.currentMin : 1
+        const currentDiffMinOne = this.state.currentMax - this.state.currentMin
         return parseFloat((100 * (currentDiffMinOne) / diff).toFixed(2))
     }
 
@@ -26,7 +33,11 @@ class Range extends React.Component {
         if (value !== '' && isFinite(value)) {
             if (parseFloat(value) < parseFloat(this.props.min)) value = this.props.min
             if (parseFloat(value) > parseFloat(this.state.currentMax)) value = this.state.currentMax
-            this.setState({showInputCurrentMin: false, currentMin: value, tempCurrentMin: value})
+            this.setState({
+                showInputCurrentMin: false,
+                currentMin: parseFloat(parseFloat(value).toFixed(this.fixed)),
+                tempCurrentMin: parseFloat(parseFloat(value).toFixed(this.fixed))
+            })
         }
         else
             this.setState({tempCurrentMin: this.state.currentMin})
@@ -37,10 +48,24 @@ class Range extends React.Component {
         if (value !== '' && isFinite(value)) {
             if (parseFloat(value) > parseFloat(this.props.max)) value = this.props.max
             if (parseFloat(value) < parseFloat(this.state.currentMin)) value = this.state.currentMin
-            this.setState({showInputCurrentMax: false, currentMax: value, tempCurrentMax: value})
+            this.setState({
+                showInputCurrentMax: false, currentMax: parseFloat(parseFloat(value).toFixed(this.fixed)), tempCurrentMax: parseFloat(parseFloat(value).toFixed(this.fixed))
+            })
         }
         else
             this.setState({tempCurrentMax: this.state.currentMax})
+    }
+
+    mouseMoveMax = (e) => {
+        const diff = e.clientX - this.state.startPositionX
+        const increment = diff * ((this.props.max - this.props.min) / this.bar.current.offsetWidth)
+        this.handleSetMax(this.state.startCurrentMax + increment)
+    }
+
+    mouseMoveMin = (e) => {
+        const diff = e.clientX - this.state.startPositionX
+        const increment = diff * ((this.props.max - this.props.min) / this.bar.current.offsetWidth)
+        this.handleSetMin(this.state.startCurrentMin + increment)
     }
 
 
@@ -61,14 +86,44 @@ class Range extends React.Component {
                     </div>
 
 
-                    <div className="input-range__bar-background" data-cy="input-range__bar-background">
-                        <div style={{left: this.calculateLeftPercent() + '%', width: this.calculateWidthPercent() + '%', minWidth: '30px'}} className="input-range__bar"
+                    <div ref={this.bar} className="input-range__bar-background" data-cy="input-range__bar-background">
+                        <div style={{left: this.calculateLeftPercent() + '%', width: this.calculateWidthPercent() + '%'}} className="input-range__bar"
                              data-cy="input-range__bar">
                             <div className="wrapper_bullet">
-                                <div className="input-range__bullet input-range__bullet--min" data-cy="input-range__bullet-min"/>
+                                <div className={`input-range__bullet input-range__bullet--min ${this.state.isGrabbing ? 'grabbing' : 'grab'}`} data-cy="input-range__bullet-min"
+                                     onMouseDown={(e) => {
+                                         e.stopPropagation()
+                                         e.preventDefault()
+                                         window.addEventListener('mousemove', this.mouseMoveMin)
+                                         window.addEventListener('mouseup', () => window.removeEventListener('mousemove', this.mouseMoveMin))
+                                         this.setState({isGrabbing: true, startPositionX: e.clientX, startCurrentMin: this.state.currentMin})
+                                     }}
+                                     onMouseUp={() => {
+                                         window.removeEventListener('mousemove', this.mouseMoveMin)
+                                         this.setState({isGrabbing: false})
+                                     }}
+                                     onMouseLeave={() => {
+                                         this.setState({isGrabbing: false})
+                                     }}
+                                />
                             </div>
                             <div className="wrapper_bullet">
-                                <div className="input-range__bullet input-range__bullet--max" data-cy="input-range__bullet-max" style={{backgroundColor: 'red'}}/>
+                                <div className={`input-range__bullet input-range__bullet--max ${this.state.isGrabbing ? 'grabbing' : 'grab'}`} data-cy="input-range__bullet-max"
+                                     onMouseDown={(e) => {
+                                         e.stopPropagation()
+                                         e.preventDefault()
+                                         window.addEventListener('mousemove', this.mouseMoveMax)
+                                         window.addEventListener('mouseup', () => window.removeEventListener('mousemove', this.mouseMoveMax))
+                                         this.setState({isGrabbing: true, startPositionX: e.clientX, startCurrentMax: this.state.currentMax})
+                                     }}
+                                     onMouseUp={() => {
+                                         window.removeEventListener('mousemove', this.mouseMoveMax)
+                                         this.setState({isGrabbing: false})
+                                     }}
+                                     onMouseLeave={() => {
+                                         this.setState({isGrabbing: false})
+                                     }}
+                                />
                             </div>
                         </div>
                     </div>

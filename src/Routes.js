@@ -19,7 +19,7 @@ class Routes extends React.Component {
                     {/*<Route path={'/'} component={HelloWorld}/>*/}
                     <Route path={'/'} component={() =>
                         <div className="wrapper" style={{padding: '25px', background: 'lightblue', width: '400px', height: '200px'}}>
-                            <Range min={1} max={200}/>
+                            <Range min={0} max={200}/>
                         </div>
                     }/>
                 </Switch>

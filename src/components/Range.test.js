@@ -5,14 +5,15 @@ import {shallow, configure} from 'enzyme'
 import '@testing-library/jest-dom/extend-expect'
 import Range from "./Range"
 
+
 configure({adapter: new Adapter()})
 
 
-describe('Range suit', () => {
-    afterEach(cleanup)
+const selectorInputMin = '[data-cy=input-range__input-min] input'
+const selectorInputMax = '[data-cy=input-range__input-max] input'
 
-    const selectorInputMin = '[data-cy=input-range__input-min] input'
-    const selectorInputMax = '[data-cy=input-range__input-max] input'
+describe('Range suit inputs', () => {
+    afterEach(cleanup)
 
     test('Render ok', () => {
         const {container} = render(<Range/>)
@@ -115,7 +116,7 @@ describe('Range suit', () => {
         {min: 0, currentMin: 0, currentMax: 100, max: 100, expected: 100},
         {min: 0, currentMin: 20, currentMax: 100, max: 100, expected: 80},
         {min: 0, currentMin: 25, currentMax: 75, max: 100, expected: 50},
-        {min: 0, currentMin: 25, currentMax: 25, max: 100, expected: 1},
+        {min: 0, currentMin: 25, currentMax: 25, max: 100, expected: 0},
     ]
     probesMaxPercent.forEach((probe) => {
         test(`calculateMaxPercent ${probe.min} ${probe.currentMin} ${probe.currentMax} ${probe.max}`, () => {
@@ -126,5 +127,122 @@ describe('Range suit', () => {
         })
     })
 
+
+})
+
+const selectorBulletMin = '[data-cy=input-range__bullet-min]'
+const selectorBulletMax = '[data-cy=input-range__bullet-max]'
+
+describe('Range suit mouse', () => {
+    afterEach(cleanup)
+
+
+    test('Bullets have cursor grab', () => {
+        const {container} = render(<Range min={1} max={100}/>)
+
+        expect(container.querySelector(selectorBulletMin)).toHaveClass('grab')
+        expect(container.querySelector(selectorBulletMax)).toHaveClass('grab')
+    })
+
+    test('Bullets have cursor grabbing on clicking', () => {
+        const {container} = render(<Range min={1} max={100}/>)
+
+        expect(container.querySelector(selectorBulletMin)).toHaveClass('grab')
+        expect(container.querySelector(selectorBulletMax)).toHaveClass('grab')
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMin))
+        expect(container.querySelector(selectorBulletMin)).toHaveClass('grabbing')
+        fireEvent.mouseUp(container.querySelector(selectorBulletMin))
+        expect(container.querySelector(selectorBulletMin)).toHaveClass('grab')
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMax))
+        expect(container.querySelector(selectorBulletMax)).toHaveClass('grabbing')
+        fireEvent.mouseUp(container.querySelector(selectorBulletMax))
+        expect(container.querySelector(selectorBulletMax)).toHaveClass('grab')
+    })
+
+    test('Move max bullet', () => {
+        const {container} = render(<Range min={0} max={100}/>)
+        Object.defineProperty(container.querySelector('[data-cy=input-range__bar-background]'), 'offsetWidth', {configurable: true, value: 100})
+
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMax))
+        fireEvent.mouseMove(window, {clientX: -50})
+        fireEvent.mouseUp(container.querySelector(selectorBulletMax))
+
+        expect(container.querySelector(selectorInputMax)).toHaveValue('50')
+
+
+    })
+    test('Move min bullet', () => {
+        const {container} = render(<Range min={0} max={100}/>)
+        Object.defineProperty(container.querySelector('[data-cy=input-range__bar-background]'), 'offsetWidth', {configurable: true, value: 100})
+
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMin))
+        fireEvent.mouseMove(window, {clientX: 50})
+        fireEvent.mouseUp(container.querySelector(selectorBulletMin))
+
+        expect(container.querySelector(selectorInputMin)).toHaveValue('50')
+
+
+    })
+
+    test('Move bullets do not cross between them', () => {
+        const {container} = render(<Range min={0} max={100}/>)
+        Object.defineProperty(container.querySelector('[data-cy=input-range__bar-background]'), 'offsetWidth', {configurable: true, value: 100})
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMin))
+        fireEvent.mouseMove(window, {clientX: 50})
+        fireEvent.mouseUp(container.querySelector(selectorBulletMin))
+
+        expect(container.querySelector(selectorInputMin)).toHaveValue('50')
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMax))
+        fireEvent.mouseMove(window, {clientX: -75})
+        fireEvent.mouseUp(container.querySelector(selectorBulletMax))
+
+        expect(container.querySelector(selectorInputMax)).toHaveValue('50')
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMin))
+        fireEvent.mouseMove(window, {clientX: 75})
+        fireEvent.mouseUp(container.querySelector(selectorBulletMin))
+
+        expect(container.querySelector(selectorInputMin)).toHaveValue('50')
+    })
+
+    test('Move min bullet don`t pass max or min', () => {
+        const {container} = render(<Range min={0} max={100}/>)
+        Object.defineProperty(container.querySelector('[data-cy=input-range__bar-background]'), 'offsetWidth', {configurable: true, value: 100})
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMin))
+        fireEvent.mouseMove(window, {clientX: -10})
+        fireEvent.mouseUp(container.querySelector(selectorBulletMin))
+
+        expect(container.querySelector(selectorInputMin)).toHaveValue('0')
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMin))
+        fireEvent.mouseMove(window, {clientX: 120})
+        fireEvent.mouseUp(container.querySelector(selectorBulletMin))
+
+        expect(container.querySelector(selectorInputMin)).toHaveValue('100')
+    })
+
+    test('Move max bullet don`t pass max or min', () => {
+        const {container} = render(<Range min={0} max={100}/>)
+        Object.defineProperty(container.querySelector('[data-cy=input-range__bar-background]'), 'offsetWidth', {configurable: true, value: 100})
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMax))
+        fireEvent.mouseMove(window, {clientX: -120})
+        fireEvent.mouseUp(container.querySelector(selectorBulletMax))
+
+        expect(container.querySelector(selectorInputMax)).toHaveValue('0')
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMax))
+        fireEvent.mouseMove(window, {clientX: 120})
+        fireEvent.mouseUp(container.querySelector(selectorBulletMax))
+
+        expect(container.querySelector(selectorInputMax)).toHaveValue('100')
+    })
 
 })

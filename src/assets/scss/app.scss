@@ -27,6 +27,14 @@ body {
         background-color: $gray;
     }
 
+    .wrapper_bullet {
+        position: relative;
+
+        &:hover {
+            z-index: 10;
+        }
+    }
+
     .input-range__bullet {
         position: absolute;
         top: -4px;
@@ -36,18 +44,22 @@ body {
         border-radius: 50%;
         background: $gray;
 
+        &:hover {
+            transform: scale(1.4);
+        }
+
         &--min {
-            left: 0;
+            right: -7.5px;
         }
 
         &--max {
-            right: 0;
+            left: -7.5px;
         }
     }
 
     .input-range__label,
     .input-range__input {
-        margin: 0 10px;
+        margin: 0 15px;
 
         &--min input {
             text-align: right;
@@ -69,4 +81,13 @@ body {
     }
 
 
+}
+
+.grab {
+    cursor: grab;
+}
+
+
+.grabbing {
+    cursor: grabbing;
 }
