@@ -132,6 +132,9 @@ describe('Range suit inputs', () => {
 
 const selectorBulletMin = '[data-cy=input-range__bullet-min]'
 const selectorBulletMax = '[data-cy=input-range__bullet-max]'
+const selectorWrapperBulletMin = '[data-cy="input-range__wrapper-bullet-min"]'
+const selectorWrapperBulletMax = '[data-cy="input-range__wrapper-bullet-max"]'
+
 
 describe('Range suit mouse', () => {
     afterEach(cleanup)
@@ -142,6 +145,21 @@ describe('Range suit mouse', () => {
 
         expect(container.querySelector(selectorBulletMin)).toHaveClass('grab')
         expect(container.querySelector(selectorBulletMax)).toHaveClass('grab')
+    })
+
+    test('Can click on last bullet used', () => {
+        const {container} = render(<Range min={1} max={100}/>)
+
+        fireEvent.mouseDown(container.querySelector(selectorBulletMin))
+        fireEvent.mouseUp(container.querySelector(selectorBulletMin))
+        expect(window.getComputedStyle(container.querySelector(selectorWrapperBulletMin)).zIndex).toBe('10')
+        expect(window.getComputedStyle(container.querySelector(selectorWrapperBulletMax)).zIndex).toBe('1')
+        fireEvent.mouseDown(container.querySelector(selectorBulletMax))
+        fireEvent.mouseUp(container.querySelector(selectorBulletMax))
+        expect(window.getComputedStyle(container.querySelector(selectorWrapperBulletMin)).zIndex).toBe('1')
+        expect(window.getComputedStyle(container.querySelector(selectorWrapperBulletMax)).zIndex).toBe('10')
+
+
     })
 
     test('Bullets have cursor grabbing on clicking', () => {
@@ -245,4 +263,38 @@ describe('Range suit mouse', () => {
         expect(container.querySelector(selectorInputMax)).toHaveValue('100')
     })
 
+
+})
+
+
+describe('Range fixed values', () => {
+    afterEach(cleanup)
+
+
+    test('Disable inputs if use options props', () => {
+        const {container} = render(<Range min={1} max={100} options={[10, 20, 30]}/>)
+
+        expect(container.querySelector(selectorInputMin)).toHaveAttribute('disabled')
+        expect(container.querySelector(selectorInputMin)).toHaveAttribute('disabled')
+    })
+    const probesMaxSteps = [
+        {move: -15, expected: '30'},
+        {move: -5, expected: '50'},
+        {move: -22, expected: '30'},
+        {move: -28, expected: '20'}
+    ]
+    probesMaxSteps.forEach(({move, expected}) => {
+        test(`Move max bullet ${move} and select first step`, () => {
+            const {container} = render(<Range min={0} max={50} options={[10, 20, 30]}/>)
+
+            Object.defineProperty(container.querySelector('[data-cy=input-range__bar-background]'), 'offsetWidth', {configurable: true, value: 50})
+
+            fireEvent.mouseDown(container.querySelector(selectorBulletMax))
+            fireEvent.mouseMove(window, {clientX: move})
+            fireEvent.mouseUp(container.querySelector(selectorBulletMax))
+
+            expect(container.querySelector(selectorInputMax)).toHaveValue(expected)
+
+        })
+    })
 })
