@@ -1,8 +1,10 @@
 import React from "react"
-import {BrowserRouter, Route, Switch} from 'react-router-dom'
-import Range from "./components/Range"
+import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom'
 import Exercise1 from "./components/Exercise1"
 import Exercise2 from "./components/Exercise2"
+import {createBrowserHistory} from 'history'
+
+const history = createBrowserHistory()
 
 
 class Routes extends React.Component {
@@ -10,7 +12,7 @@ class Routes extends React.Component {
 
     render() {
         return (
-            <BrowserRouter>
+            <Router history={history}>
                 <Switch>
                     <Route path={'/exercise1'} component={() =>
                         <div className="wrapper" style={{padding: '25px', width: '400px'}}>
@@ -21,14 +23,17 @@ class Routes extends React.Component {
                         <div className="wrapper" style={{padding: '25px', width: '400px'}}>
                             <Exercise2/>
                         </div>}/>
-                    {/*<Route path={'/'} component={HelloWorld}/>*/}
                     <Route path={'/'} component={() =>
-                        <div className="wrapper" style={{padding: '25px', background: 'lightblue', width: '400px', height: '200px'}}>
-                            <Range min={0} max={200} fixed={2} options={[1.99, 5.99, 10.99, 30.99, 50.99, 70.99]}/>
+                        <div>
+                            <span>hello world</span>
+                            <ul>
+                                <li><Link to="/exercise1">Exercise 1</Link></li>
+                                <li><Link to="/exercise2">Exercise 2</Link></li>
+                            </ul>
                         </div>
                     }/>
                 </Switch>
-            </BrowserRouter>
+            </Router>
         )
     }
 }
