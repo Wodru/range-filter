@@ -126,7 +126,6 @@ class Range extends React.Component {
                            onChange={(e) => this.setState({tempCurrentMin: e.target.value})}
                            size={this.size}
                            value={this.state.tempCurrentMin}
-                           autoFocus={true}
                            disabled={this.props.options}
                     />
                 </div>
@@ -169,7 +168,6 @@ class Range extends React.Component {
                            onChange={(e) => this.setState({tempCurrentMax: e.target.value})}
                            size={this.size}
                            value={this.state.tempCurrentMax}
-                           autoFocus={true}
                            disabled={this.props.options}
                     />
                 </div>
