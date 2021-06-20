@@ -83,13 +83,16 @@ describe('Range suit inputs', () => {
         changeMin(20)
     })
     const probesSize = [
-        {max: 5, expected: '1'},
-        {max: 10, expected: '2'},
-        {max: 100, expected: '3'},
+        {max: 5, fixed: undefined, options: undefined, expected: '1'},
+        {max: 10, fixed: 0, options: undefined, expected: '2'},
+        {max: 100, fixed: 0, options: undefined, expected: '3'},
+        {max: 100.123, fixed: 2, options: undefined, expected: '5'},
+        {max: 100, fixed: 3, options: [1, 2, 10, 50, 80.125, 100], expected: '6'},
     ]
-    probesSize.forEach(({max, expected}) => {
-        test(`Check sizes input ${max + ', ' + expected}`, () => {
-            const {container} = render(<Range min={1} max={max}/>)
+    probesSize.forEach(({max, fixed, options, expected}) => {
+        const optionsString = options ? options.toString() : ''
+        test(`Check sizes input ${max + ', ' + fixed + ', ' + optionsString + ', ' + expected}`, () => {
+            const {container} = render(<Range min={1} max={max} fixed={fixed} options={options}/>)
 
             expect(container.querySelector(selectorInputMin).getAttribute('size')).toBe(expected)
             expect(container.querySelector(selectorInputMax).getAttribute('size')).toBe(expected)
@@ -278,16 +281,16 @@ describe('Range fixed values', () => {
         expect(container.querySelector(selectorInputMin)).toHaveAttribute('disabled')
     })
     const probesMaxSteps = [
-        {move: -15, expected: '30'},
-        {move: -5, expected: '50'},
-        {move: -22, expected: '30'},
-        {move: -28, expected: '20'}
+        {move: -15, expected: '200'},
+        {move: -100, expected: '70.99'},
+        {move: -195, expected: '5.99'},
+        {move: -188, expected: '10.99'},
     ]
     probesMaxSteps.forEach(({move, expected}) => {
         test(`Move max bullet ${move} and select first step`, () => {
-            const {container} = render(<Range min={0} max={50} options={[10, 20, 30]}/>)
+            const {container} = render(<Range min={0} max={200} fixed={2} options={[1.99, 5.99, 10.99, 30.99, 50.99, 70.99]}/>)
 
-            Object.defineProperty(container.querySelector('[data-cy=input-range__bar-background]'), 'offsetWidth', {configurable: true, value: 50})
+            Object.defineProperty(container.querySelector('[data-cy=input-range__bar-background]'), 'offsetWidth', {configurable: true, value: 200})
 
             fireEvent.mouseDown(container.querySelector(selectorBulletMax))
             fireEvent.mouseMove(window, {clientX: move})

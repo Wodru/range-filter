@@ -12,13 +12,11 @@ class Range extends React.Component {
             startCurrentMax: props.max,
             isGrabbing: false,
             startPositionX: 0,
-            optionsSorted: this.props.options ? this.props.options.sort() : null,
             lastUsed: 'min'
         }
         this.bar = React.createRef()
         this.fixed = this.props.fixed ?? 0
-        const digitOfMax = this.props.max ? this.props.max.toString().length : 1
-        this.size = this.props.fixed ? this.props.fixed + digitOfMax : digitOfMax
+        this.size = parseInt(props.max).toString().length + this.fixed
     }
 
     componentWillUnmount() {
@@ -58,10 +56,15 @@ class Range extends React.Component {
             if (parseFloat(value) > parseFloat(this.props.max)) value = this.props.max
             if (parseFloat(value) < parseFloat(this.state.currentMin)) value = this.state.currentMin
 
-            if (this.state.optionsSorted) {
-                const minorOption = this.state.optionsSorted.reverse().find(number => number <= value) ?? this.props.min
-                const majorOption = this.state.optionsSorted.reverse().find(number => number >= value) ?? this.props.max
-
+            if (this.props.options) {
+                let minorOption = this.props.min
+                this.props.options.forEach(option => {
+                    minorOption = (option > minorOption && option <= value) ? option : minorOption
+                })
+                let majorOption = this.props.max
+                this.props.options.forEach(option => {
+                    majorOption = (option < majorOption && option >= value) ? option : majorOption
+                })
                 const diffMinorOption = value - minorOption
                 const diffMajorOption = majorOption - value
 
