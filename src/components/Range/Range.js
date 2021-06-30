@@ -1,4 +1,5 @@
 import React from "react"
+import './Range.scss'
 
 class Range extends React.Component {
     constructor(props) {

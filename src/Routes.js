@@ -1,7 +1,7 @@
 import React from "react"
 import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom'
-import Exercise1 from "./components/Exercise1"
-import Exercise2 from "./components/Exercise2"
+import Exercise1 from "./components/Exercise1/Exercise1"
+import Exercise2 from "./components/Exercise2/Exercise2"
 import {createBrowserHistory} from 'history'
 
 const history = createBrowserHistory()

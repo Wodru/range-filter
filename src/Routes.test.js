@@ -6,8 +6,8 @@ import Routes from './Routes'
 import {createBrowserHistory} from 'history'
 
 
-jest.mock('./components/Exercise1', () => (props) => <div data-testid="Exercise1" {...props}/>)
-jest.mock('./components/Exercise2', () => (props) => <div data-testid="Exercise2" {...props}/>)
+jest.mock('./components/Exercise1/Exercise1', () => (props) => <div data-testid="Exercise1" {...props}/>)
+jest.mock('./components/Exercise2/Exercise2', () => (props) => <div data-testid="Exercise2" {...props}/>)
 
 
 describe('Routes suit', () => {

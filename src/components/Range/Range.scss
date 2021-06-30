@@ -1,0 +1,85 @@
+@import '/src/assets/scss/variables';
+
+.input-range {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .input-range__bar-background {
+        width: 100%;
+        height: 5px;
+        background-color: $lightGray;
+        position: relative;
+    }
+
+    .input-range__bar {
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+        height: 100%;
+        background-color: $gray;
+    }
+
+    .wrapper_bullet {
+        position: relative;
+
+        &:hover {
+            z-index: 10;
+        }
+    }
+
+    .input-range__bullet {
+        position: absolute;
+        top: -4px;
+        width: 15px;
+        height: 15px;
+
+        border-radius: 50%;
+        background: $gray;
+
+        &:hover {
+            transform: scale(1.4);
+        }
+
+        &--min {
+            right: -7.5px;
+        }
+
+        &--max {
+            left: -7.5px;
+        }
+    }
+
+    .input-range__label,
+    .input-range__input {
+        margin: 0 15px;
+
+        &--min input {
+            text-align: right;
+        }
+
+    }
+
+    .input-range__input {
+
+        input {
+            background: transparent;
+            border: none;
+            outline: none;
+
+            &:focus-visible {
+                border-bottom: 1px solid $gray;
+            }
+        }
+    }
+
+
+    .grab {
+        cursor: grab;
+    }
+
+    .grabbing {
+        cursor: grabbing;
+    }
+}
