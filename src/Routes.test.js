@@ -20,7 +20,8 @@ describe('Routes suit', () => {
                 <Routes/>
             </Router>
         )
-        expect(screen.getByText(/hello world/i)).toBeInTheDocument()
+        expect(screen.getByText(/Exercise 1/i)).toBeInTheDocument()
+        expect(screen.getByText(/Exercise 2/i)).toBeInTheDocument()
     })
     test('exercise 1', () => {
         const history = createBrowserHistory()

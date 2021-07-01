@@ -25,7 +25,6 @@ class Routes extends React.Component {
                         </div>}/>
                     <Route path={'/'} component={() =>
                         <div>
-                            <span>hello world</span>
                             <ul>
                                 <li><Link to="/exercise1">Exercise 1</Link></li>
                                 <li><Link to="/exercise2">Exercise 2</Link></li>
