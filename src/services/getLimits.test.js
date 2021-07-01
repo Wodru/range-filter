@@ -1,16 +1,17 @@
 import "babel-polyfill"
 import '@testing-library/jest-dom/extend-expect'
-import {getOptions} from './Exercise2'
+import {getLimits} from './getLimits'
 import api from '../api'
 
 
-describe('Service Exercise 2', () => {
+describe('Service Exercise 1', () => {
     const ApiLocation = process.env.API_HOST
     api.get = jest.fn((url) => {
         return url
     })
-    test('getOptions', () => {
-        expect(getOptions()).toBe(ApiLocation + '/options')
+
+    test('getLimits', () => {
+        expect(getLimits()).toBe(ApiLocation + '/limits')
     })
 
 })

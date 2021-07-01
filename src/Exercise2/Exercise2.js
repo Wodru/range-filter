@@ -1,6 +1,6 @@
 import React from "react"
 
-import {getOptions} from "../services/Exercise2"
+import {getOptions} from "../services/getOptions"
 import Range from "../components/Range/Range"
 
 

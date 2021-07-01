@@ -1,6 +1,6 @@
 import React from "react"
 
-import {getLimits} from "../services/Exercise1"
+import {getLimits} from "../services/getLimits"
 import Range from "../components/Range/Range"
 
 
