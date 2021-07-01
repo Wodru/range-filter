@@ -141,6 +141,9 @@ class Range extends React.Component {
                          data-cy="input-range__bar">
                         <div className={`wrapper_bullet ${this.state.lastUsed === 'min' ? 'wrapper_bullet--last-used' : ''}`} data-cy="input-range__wrapper-bullet-min">
                             <div className={`input-range__bullet input-range__bullet--min ${this.state.isGrabbing ? 'grabbing' : 'grab'}`} data-cy="input-range__bullet-min"
+                                 role="slider"
+                                 aria-valuenow={this.state.tempCurrentMin}
+                                 tabIndex={0}
                                  onMouseDown={(e) => {
                                      e.stopPropagation()
                                      e.preventDefault()
@@ -152,6 +155,9 @@ class Range extends React.Component {
                         </div>
                         <div className={`wrapper_bullet ${this.state.lastUsed === 'max' ? 'wrapper_bullet--last-used' : ''}`} data-cy="input-range__wrapper-bullet-max">
                             <div className={`input-range__bullet input-range__bullet--max ${this.state.isGrabbing ? 'grabbing' : 'grab'}`} data-cy="input-range__bullet-max"
+                                 role="slider"
+                                 aria-valuenow={this.state.tempCurrentMax}
+                                 tabIndex={0}
                                  onMouseDown={(e) => {
                                      e.stopPropagation()
                                      e.preventDefault()
