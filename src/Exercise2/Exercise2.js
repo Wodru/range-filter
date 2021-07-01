@@ -1,7 +1,7 @@
 import React from "react"
 
-import {getOptions} from "../../services/Exercise2"
-import Range from "../Range/Range"
+import {getOptions} from "../services/Exercise2"
+import Range from "../components/Range/Range"
 
 
 class Exercise2 extends React.Component {

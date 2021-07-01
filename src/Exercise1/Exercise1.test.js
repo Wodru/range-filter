@@ -7,7 +7,7 @@ import MockAdapter from "axios-mock-adapter"
 import axios from "axios"
 
 
-jest.mock('../Range/Range', () => (props) => <div data-testid="Range" {...props}/>)
+jest.mock('../components/Range/Range', () => (props) => <div data-testid="Range" {...props}/>)
 
 describe('Exercise1', () => {
     afterEach(cleanup)
