@@ -2,6 +2,7 @@ import React from "react"
 
 import {getOptions} from "../services/getOptions"
 import Range from "../components/Range/Range"
+import './Exercise2.scss'
 
 
 class Exercise2 extends React.Component {
@@ -41,7 +42,7 @@ class Exercise2 extends React.Component {
         if (this.state.isLoading) return <div>Is Loading...</div>
         if (this.state.alert) return <div>{this.state.alert}</div>
         return (
-            <div>
+            <div className="wrapper_exercise wrapper_exercise_1">
                 <Range min={this.state.min} max={this.state.max} options={this.state.options} fixed={this.state.fixed}/>
             </div>
         )

@@ -155,12 +155,12 @@ describe('Range suit mouse', () => {
 
         fireEvent.mouseDown(container.querySelector(selectorBulletMin))
         fireEvent.mouseUp(container.querySelector(selectorBulletMin))
-        expect(window.getComputedStyle(container.querySelector(selectorWrapperBulletMin)).zIndex).toBe('10')
-        expect(window.getComputedStyle(container.querySelector(selectorWrapperBulletMax)).zIndex).toBe('1')
+        expect(container.querySelector(selectorWrapperBulletMin).className).toBe('wrapper_bullet wrapper_bullet--last-used')
+        expect(container.querySelector(selectorWrapperBulletMax).className).toBe('wrapper_bullet ')
         fireEvent.mouseDown(container.querySelector(selectorBulletMax))
         fireEvent.mouseUp(container.querySelector(selectorBulletMax))
-        expect(window.getComputedStyle(container.querySelector(selectorWrapperBulletMin)).zIndex).toBe('1')
-        expect(window.getComputedStyle(container.querySelector(selectorWrapperBulletMax)).zIndex).toBe('10')
+        expect(container.querySelector(selectorWrapperBulletMin).className).toBe('wrapper_bullet ')
+        expect(container.querySelector(selectorWrapperBulletMax).className).toBe('wrapper_bullet wrapper_bullet--last-used')
 
 
     })

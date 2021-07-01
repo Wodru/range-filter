@@ -139,7 +139,7 @@ class Range extends React.Component {
                     <div style={{left: this.calculateLeftPercent() + '%', width: this.calculateWidthPercent() + '%', transition: this.state.isGrabbing ? '0s' : '0.4s'}}
                          className="input-range__bar"
                          data-cy="input-range__bar">
-                        <div className="wrapper_bullet" style={{zIndex: this.state.lastUsed === 'min' ? 10 : 1}} data-cy="input-range__wrapper-bullet-min">
+                        <div className={`wrapper_bullet ${this.state.lastUsed === 'min' ? 'wrapper_bullet--last-used' : ''}`} data-cy="input-range__wrapper-bullet-min">
                             <div className={`input-range__bullet input-range__bullet--min ${this.state.isGrabbing ? 'grabbing' : 'grab'}`} data-cy="input-range__bullet-min"
                                  onMouseDown={(e) => {
                                      e.stopPropagation()
@@ -150,7 +150,7 @@ class Range extends React.Component {
                                  }}
                             />
                         </div>
-                        <div className="wrapper_bullet" style={{zIndex: this.state.lastUsed === 'max' ? 10 : 1}} data-cy="input-range__wrapper-bullet-max">
+                        <div className={`wrapper_bullet ${this.state.lastUsed === 'max' ? 'wrapper_bullet--last-used' : ''}`} data-cy="input-range__wrapper-bullet-max">
                             <div className={`input-range__bullet input-range__bullet--max ${this.state.isGrabbing ? 'grabbing' : 'grab'}`} data-cy="input-range__bullet-max"
                                  onMouseDown={(e) => {
                                      e.stopPropagation()

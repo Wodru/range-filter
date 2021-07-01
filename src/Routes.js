@@ -15,14 +15,11 @@ class Routes extends React.Component {
             <Router history={history}>
                 <Switch>
                     <Route path={'/exercise1'} component={() =>
-                        <div className="wrapper" style={{padding: '25px', width: '400px'}}>
-                            <Exercise1/>
-                        </div>
+                        <Exercise1/>
                     }/>
                     <Route path={'/exercise2'} component={() =>
-                        <div className="wrapper" style={{padding: '25px', width: '400px'}}>
-                            <Exercise2/>
-                        </div>}/>
+                        <Exercise2/>
+                    }/>
                     <Route path={'/'} component={() =>
                         <div>
                             <ul>

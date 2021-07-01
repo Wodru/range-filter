@@ -2,6 +2,7 @@ import React from "react"
 
 import {getLimits} from "../services/getLimits"
 import Range from "../components/Range/Range"
+import './Exercise1.scss'
 
 
 class Exercise1 extends React.Component {
@@ -29,7 +30,7 @@ class Exercise1 extends React.Component {
         if (this.state.isLoading) return <div>Is Loading...</div>
         if (this.state.alert) return <div>{this.state.alert}</div>
         return (
-            <div>
+            <div className="wrapper_exercise wrapper_exercise_1">
                 <Range min={this.state.min} max={this.state.max}/>
             </div>
         )

@@ -27,6 +27,10 @@
         &:hover {
             z-index: 10;
         }
+
+        &--last-used {
+            z-index: 10;
+        }
     }
 
     .input-range__bullet {
