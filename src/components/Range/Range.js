@@ -1,5 +1,7 @@
 import React from "react"
 import './Range.scss'
+import Bullet from "./Bullet/Bullet"
+import {handleValueLimits} from "./utils"
 
 class Range extends React.Component {
     constructor(props) {
@@ -11,6 +13,7 @@ class Range extends React.Component {
             currentMax: props.max,
             tempCurrentMax: props.max,
             startCurrentMax: props.max,
+            startCurrentValue: 0,
             isGrabbing: false,
             startPositionX: 0,
             lastUsed: 'min'
@@ -18,13 +21,12 @@ class Range extends React.Component {
         this.bar = React.createRef()
         this.fixed = this.props.fixed ?? 0
         this.size = parseInt(props.max).toString().length + this.fixed
+        this._isMounted = true
     }
 
     componentWillUnmount() {
-        window.removeEventListener('mouseup', this.mouseUpMin)
-        window.removeEventListener('mouseup', this.mouseUpMax)
+        this._isMounted = false
     }
-
 
     calculateLeftPercent() {
         const diff = this.props.max - this.props.min
@@ -39,12 +41,10 @@ class Range extends React.Component {
 
     handleSetMin(value) {
         if (value !== '' && isFinite(value)) {
-            if (parseFloat(value) < parseFloat(this.props.min)) value = this.props.min
-            if (parseFloat(value) > parseFloat(this.state.currentMax)) value = this.state.currentMax
+            value = handleValueLimits(parseFloat(value), this.props.min, this.state.currentMax)
             this.setState({
-                showInputCurrentMin: false,
-                currentMin: parseFloat(parseFloat(value).toFixed(this.fixed)),
-                tempCurrentMin: parseFloat(parseFloat(value).toFixed(this.fixed))
+                currentMin: parseFloat(value.toFixed(this.fixed)),
+                tempCurrentMin: parseFloat(value.toFixed(this.fixed))
             })
         }
         else
@@ -52,70 +52,22 @@ class Range extends React.Component {
 
     }
 
-    selectNearValue(value) {
-        if (value !== '' && isFinite(value)) {
-            if (parseFloat(value) > parseFloat(this.props.max)) value = this.props.max
-            if (parseFloat(value) < parseFloat(this.state.currentMin)) value = this.state.currentMin
-
-            if (this.props.options) {
-                let minorOption = this.props.min
-                this.props.options.forEach(option => {
-                    minorOption = (option > minorOption && option <= value) ? option : minorOption
-                })
-                let majorOption = this.props.max
-                this.props.options.forEach(option => {
-                    majorOption = (option < majorOption && option >= value) ? option : majorOption
-                })
-                const diffMinorOption = value - minorOption
-                const diffMajorOption = majorOption - value
-
-                if (diffMajorOption >= diffMinorOption) value = minorOption
-                else value = majorOption
-
-            }
-        }
-        return value
-    }
-
     handleSetMax(value) {
         if (value !== '' && isFinite(value)) {
-            if (parseFloat(value) > parseFloat(this.props.max)) value = this.props.max
-            if (parseFloat(value) < parseFloat(this.state.currentMin)) value = this.state.currentMin
+            value = handleValueLimits(parseFloat(value), this.state.currentMin, this.props.max)
 
             this.setState({
-                showInputCurrentMax: false, currentMax: parseFloat(parseFloat(value).toFixed(this.fixed)), tempCurrentMax: parseFloat(parseFloat(value).toFixed(this.fixed))
+                currentMax: parseFloat(parseFloat(value).toFixed(this.fixed)),
+                tempCurrentMax: parseFloat(parseFloat(value).toFixed(this.fixed))
             })
-
-
         }
         else
             this.setState({tempCurrentMax: this.state.currentMax})
     }
 
-    mouseMoveMax = (e) => {
-        const diff = e.clientX - this.state.startPositionX
-        const increment = diff * ((this.props.max - this.props.min) / this.bar.current.offsetWidth)
-        this.handleSetMax(this.state.startCurrentMax + increment)
-    }
 
-    mouseMoveMin = (e) => {
-        const diff = e.clientX - this.state.startPositionX
-        const increment = diff * ((this.props.max - this.props.min) / this.bar.current.offsetWidth)
-        this.handleSetMin(this.state.startCurrentMin + increment)
-    }
-
-    mouseUpMin = () => {
-        this.setState({isGrabbing: false})
-        this.handleSetMin(this.selectNearValue(this.state.currentMin))
-        window.removeEventListener('mousemove', this.mouseMoveMin)
-        window.removeEventListener('mouseUp', this.mouseUpMin)
-    }
-
-    mouseUpMax = () => {
-        this.setState({isGrabbing: false})
-        this.handleSetMax(this.selectNearValue(this.state.currentMax))
-        window.removeEventListener('mousemove', this.mouseMoveMax)
-        window.removeEventListener('mouseUp', this.mouseUpMax)
+    getWidthOfBar() {
+        return this.bar.current.offsetWidth
     }
 
 
@@ -139,34 +91,44 @@ class Range extends React.Component {
                     <div style={{left: this.calculateLeftPercent() + '%', width: this.calculateWidthPercent() + '%', transition: this.state.isGrabbing ? '0s' : '0.4s'}}
                          className="input-range__bar"
                          data-cy="input-range__bar">
-                        <div className={`wrapper_bullet ${this.state.lastUsed === 'min' ? 'wrapper_bullet--last-used' : ''}`} data-cy="input-range__wrapper-bullet-min">
-                            <div className={`input-range__bullet input-range__bullet--min ${this.state.isGrabbing ? 'grabbing' : 'grab'}`} data-cy="input-range__bullet-min"
-                                 role="slider"
-                                 aria-valuenow={this.state.tempCurrentMin}
-                                 tabIndex={0}
-                                 onMouseDown={(e) => {
-                                     e.stopPropagation()
-                                     e.preventDefault()
-                                     window.addEventListener('mousemove', this.mouseMoveMin)
-                                     window.addEventListener('mouseup', this.mouseUpMin)
-                                     this.setState({isGrabbing: true, startPositionX: e.clientX, startCurrentMin: this.state.currentMin, lastUsed: 'min'})
-                                 }}
-                            />
-                        </div>
-                        <div className={`wrapper_bullet ${this.state.lastUsed === 'max' ? 'wrapper_bullet--last-used' : ''}`} data-cy="input-range__wrapper-bullet-max">
-                            <div className={`input-range__bullet input-range__bullet--max ${this.state.isGrabbing ? 'grabbing' : 'grab'}`} data-cy="input-range__bullet-max"
-                                 role="slider"
-                                 aria-valuenow={this.state.tempCurrentMax}
-                                 tabIndex={0}
-                                 onMouseDown={(e) => {
-                                     e.stopPropagation()
-                                     e.preventDefault()
-                                     window.addEventListener('mousemove', this.mouseMoveMax)
-                                     window.addEventListener('mouseup', this.mouseUpMax)
-                                     this.setState({isGrabbing: true, startPositionX: e.clientX, startCurrentMax: this.state.currentMax, lastUsed: 'max'})
-                                 }}
-                            />
-                        </div>
+                        <Bullet
+                            type="min"
+                            isLastUsed={this.state.lastUsed === 'min'}
+                            isGrabbing={this.state.isGrabbing}
+                            value={this.state.tempCurrentMin}
+                            handleSetValue={value => this._isMounted ? this.handleSetMin(value) : null}
+                            onMouseDown={(e) => {
+                                this.setState({isGrabbing: true, startPositionX: e.clientX, startCurrentValue: this.state.currentMin, lastUsed: 'min'})
+                            }}
+                            onMouseUp={() =>
+                                this._isMounted ? this.setState({isGrabbing: false}) : null
+                            }
+                            getWidthOfBar={() => this.getWidthOfBar()}
+                            startPositionX={this.state.startPositionX}
+                            startCurrentValue={this.state.startCurrentValue}
+                            min={this.props.min}
+                            max={this.props.max}
+                            options={this.props.options}
+                        />
+                        <Bullet
+                            type="max"
+                            isLastUsed={this.state.lastUsed === 'max'}
+                            isGrabbing={this.state.isGrabbing}
+                            value={this.state.tempCurrentMax}
+                            handleSetValue={value => this._isMounted ? this.handleSetMax(value) : null}
+                            onMouseDown={(e) => {
+                                this.setState({isGrabbing: true, startPositionX: e.clientX, startCurrentValue: this.state.currentMax, lastUsed: 'max'})
+                            }}
+                            onMouseUp={() =>
+                                this._isMounted ? this.setState({isGrabbing: false}) : null
+                            }
+                            getWidthOfBar={() => this.getWidthOfBar()}
+                            startPositionX={this.state.startPositionX}
+                            startCurrentValue={this.state.startCurrentValue}
+                            min={this.props.min}
+                            max={this.props.max}
+                            options={this.props.options}
+                        />
                     </div>
                 </div>
 

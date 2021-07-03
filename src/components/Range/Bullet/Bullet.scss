@@ -1,0 +1,35 @@
+@import '/src/assets/scss/variables';
+
+.wrapper_bullet {
+    position: relative;
+
+    &:hover {
+        z-index: 10;
+    }
+
+    &--last-used {
+        z-index: 10;
+    }
+
+    .input-range__bullet {
+        position: absolute;
+        top: -4px;
+        width: 15px;
+        height: 15px;
+
+        border-radius: 50%;
+        background: $gray;
+
+        &:hover {
+            transform: scale(1.4);
+        }
+
+        &--min {
+            right: -7.5px;
+        }
+
+        &--max {
+            left: -7.5px;
+        }
+    }
+}
