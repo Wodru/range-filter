@@ -12,7 +12,7 @@ class Routes extends React.Component {
 
     render() {
         return (
-            <Router history={history}>
+            <Router basename={"/range-filter"} history={history}>
                 <Switch>
                     <Route path={'/exercise1'} component={() =>
                         <Exercise1/>

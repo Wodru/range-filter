@@ -14,27 +14,47 @@ class Exercise2 extends React.Component {
     }
 
     componentDidMount() {
-        getOptions().then((response) => {
-            if (response.status === 200) {
-                const options = response.data.options
-                let fixed = 0
-                options.forEach(option => {
-                    const numberOfDecimals = option.toString().split('.')[1] ? option.toString().split('.')[1].length : 0
-                    fixed = numberOfDecimals > fixed ? numberOfDecimals : fixed
-                })
-                this.setState({
-                    min: options.reduce((acc, val) => acc <= val ? acc : val),
-                    max: options.reduce((acc, val) => acc >= val ? acc : val),
-                    options: options,
-                    fixed: fixed,
-                    isLoading: false
-                })
-            }
-            else {
-                this.setState({alert: response.statusText, isLoading: false})
-            }
-
+        let options = [
+            1.99,
+            5.99,
+            10.99,
+            30.99,
+            50.99,
+            70.99
+        ]
+        let fixed = 0
+        options.forEach(option => {
+            const numberOfDecimals = option.toString().split('.')[1] ? option.toString().split('.')[1].length : 0
+            fixed = numberOfDecimals > fixed ? numberOfDecimals : fixed
         })
+        this.setState({
+            min: options.reduce((acc, val) => acc <= val ? acc : val),
+            max: options.reduce((acc, val) => acc >= val ? acc : val),
+            options: options,
+            fixed: fixed,
+            isLoading: false
+        })
+        // getOptions().then((response) => {
+        //     if (response.status === 200) {
+        //         const options = response.data.options
+        //         let fixed = 0
+        //         options.forEach(option => {
+        //             const numberOfDecimals = option.toString().split('.')[1] ? option.toString().split('.')[1].length : 0
+        //             fixed = numberOfDecimals > fixed ? numberOfDecimals : fixed
+        //         })
+        //         this.setState({
+        //             min: options.reduce((acc, val) => acc <= val ? acc : val),
+        //             max: options.reduce((acc, val) => acc >= val ? acc : val),
+        //             options: options,
+        //             fixed: fixed,
+        //             isLoading: false
+        //         })
+        //     }
+        //     else {
+        //         this.setState({alert: response.statusText, isLoading: false})
+        //     }
+        //
+        // })
     }
 
 

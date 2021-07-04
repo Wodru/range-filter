@@ -14,15 +14,17 @@ class Exercise1 extends React.Component {
     }
 
     componentDidMount() {
-        getLimits().then((response) => {
-            if (response.status === 200) {
-                this.setState({min: response.data.min, max: response.data.max, isLoading: false})
-            }
-            else {
-                this.setState({alert: response.statusText, isLoading: false})
-            }
+        this.setState({min: 0, max: 100, isLoading: false})
 
-        })
+        // getLimits().then((response) => {
+        //     if (response.status === 200) {
+        //         this.setState({min: response.data.min, max: response.data.max, isLoading: false})
+        //     }
+        //     else {
+        //         this.setState({alert: response.statusText, isLoading: false})
+        //     }
+        //
+        // })
     }
 
 
