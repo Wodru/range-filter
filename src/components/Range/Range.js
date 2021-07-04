@@ -3,6 +3,27 @@ import './Range.scss'
 import Bullet from "./Bullet/Bullet"
 import {handleValueLimits} from "./utils"
 
+/**
+ * Slider with 2 bullets
+ *
+ * @component
+ * @example
+ * <div> <!-- custom width -->
+ *     <Range
+ *          min={0} //{number} determine min value
+ *          max={100} //{number} determine max value
+ *     />
+ * </div>
+ * <div> <!-- custom width -->
+ *     <Range
+ *          min={0} //{number} determine min value
+ *          max={100} //{number} determine max value
+ *          options={[10,20,30,40,50,60]} //{array:number} determine the values that can be set
+ *          fixed={0} //{number} determine of decimals and size inputs
+ *     />
+ * </div>
+ *
+ */
 class Range extends React.Component {
     constructor(props) {
         super(props)
@@ -28,17 +49,29 @@ class Range extends React.Component {
         this._isMounted = false
     }
 
+    /**
+     * Calculate the percentage of the left space
+     * @returns {number} [0-100]
+     */
     calculateLeftPercent() {
         const diff = this.props.max - this.props.min
         return parseFloat((100 * (this.state.currentMin - this.props.min) / diff).toFixed(2))
     }
 
+    /**
+     * Calculate the percentage of the space between bullets
+     * @returns {number} [0-100]
+     */
     calculateWidthPercent() {
         const diff = this.props.max - this.props.min
         const currentDiffMinOne = this.state.currentMax - this.state.currentMin
         return parseFloat((100 * (currentDiffMinOne) / diff).toFixed(2))
     }
 
+    /**
+     * checks the value and saves it in the component state
+     * @param {string|number} value
+     */
     handleSetMin(value) {
         if (value !== '' && isFinite(value)) {
             value = handleValueLimits(parseFloat(value), this.props.min, this.state.currentMax)
@@ -52,6 +85,10 @@ class Range extends React.Component {
 
     }
 
+    /**
+     * checks the value and saves it in the component state
+     * @param {string|number} value
+     */
     handleSetMax(value) {
         if (value !== '' && isFinite(value)) {
             value = handleValueLimits(parseFloat(value), this.state.currentMin, this.props.max)
@@ -65,7 +102,10 @@ class Range extends React.Component {
             this.setState({tempCurrentMax: this.state.currentMax})
     }
 
-
+    /**
+     * current width of the slider
+     * @returns {number} width
+     */
     getWidthOfBar() {
         return this.bar.current.offsetWidth
     }
