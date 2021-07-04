@@ -56,6 +56,7 @@ class Bullet extends React.Component {
         this.props.handleSetValue(this.selectNearValue(this.props.value))
         window.removeEventListener('mousemove', this.mouseMove)
         window.removeEventListener('mouseUp', this.mouseUp)
+        this.props.onMouseUp()
     }
 
     /**
@@ -100,9 +101,6 @@ class Bullet extends React.Component {
                          window.addEventListener('mousemove', this.mouseMove)
                          window.addEventListener('mouseup', this.mouseUp)
                          this.props.onMouseDown(e)
-                     }}
-                     onMouseUp={() => {
-                         this.props.onMouseUp()
                      }}
                 />
             </div>

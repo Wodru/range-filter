@@ -182,6 +182,23 @@ describe('Range suit mouse', () => {
         expect(container.querySelector(selectorBulletMax)).toHaveClass('grab')
     })
 
+    test('Bullets have transitions on mouseUp and windows mouse up', () => {
+        const {container} = render(<Range min={1} max={100}/>)
+        expect(window.getComputedStyle(container.querySelector('[data-cy=input-range__bar]')).transition).toBe('0.4s')
+        fireEvent.mouseDown(container.querySelector(selectorBulletMin))
+        expect(window.getComputedStyle(container.querySelector('[data-cy=input-range__bar]')).transition).toBe('0s')
+        fireEvent.mouseUp(container.querySelector(selectorBulletMin))
+        expect(window.getComputedStyle(container.querySelector('[data-cy=input-range__bar]')).transition).toBe('0.4s')
+
+        expect(window.getComputedStyle(container.querySelector('[data-cy=input-range__bar]')).transition).toBe('0.4s')
+        fireEvent.mouseDown(container.querySelector(selectorBulletMin))
+        expect(window.getComputedStyle(container.querySelector('[data-cy=input-range__bar]')).transition).toBe('0s')
+        fireEvent.mouseMove(window, {clientY: 50})
+        fireEvent.mouseUp(window)
+        expect(window.getComputedStyle(container.querySelector('[data-cy=input-range__bar]')).transition).toBe('0.4s')
+
+    })
+
     test('Move max bullet', () => {
         const {container} = render(<Range min={0} max={100}/>)
         Object.defineProperty(container.querySelector('[data-cy=input-range__bar-background]'), 'offsetWidth', {configurable: true, value: 100})
